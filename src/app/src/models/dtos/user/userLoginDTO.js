@@ -1,4 +1,4 @@
-const sanitationUtils = require("./../../utils/sanitationUtils");
+const sanitationUtils = require("../../../utils/sanitationUtils");
 
 const properties = ["email", "password", "rememberMe"];
 const types = {

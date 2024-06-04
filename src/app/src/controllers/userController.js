@@ -1,12 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const sanitationUtils = require("./../utils/sanitationUtils");
-
 const userModel = require("./../models/database/userModel");
 
-const checkUserRegisterDTO = require("./../models/dtos/userRegisterDTO");
-const checkUserLoginDTO = require("./../models/dtos/userLoginDTO");
+const checkUserRegisterDTO = require("./../models/dtos/user/userRegisterDTO");
+const checkUserLoginDTO = require("./../models/dtos/user/userLoginDTO");
 
 exports.postRegisterApi = async function (req, res) {
   try {
