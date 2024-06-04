@@ -15,10 +15,11 @@ fileUtils.tryCreateDirectory("images");
 
 const PORT = process.env.PORT ?? 5000;
 const DB_URL = process.env.DB_URL;
-const NODE_ENV = process.env.NODE_ENV;
+const env = process.env.NODE_ENV;
+
 if (!DB_URL) throw "No database URL found.";
 if (!process.env.SECRET_KEY) throw "No secret key found.";
-if (!NODE_ENV || (NODE_ENV !== "production" && NODE_ENV !== "development"))
+if (env === undefined || (env != "production" && env != "development"))
   throw "Incorrect NODE_ENV value. Must be either 'production', or 'development'.";
 
 let cfg = configUtils.getConfig();
@@ -36,6 +37,8 @@ app.all("*", function (req, res, next) {
   if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
+
+app.use("/images", express.static("images"));
 
 // routing
 

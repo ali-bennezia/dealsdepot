@@ -1,9 +1,10 @@
 const sanitationUtils = require("./../../utils/sanitationUtils");
 
-const properties = ["email", "password"];
+const properties = ["email", "password", "rememberMe"];
 const types = {
   email: [String, "string"],
   password: [String, "string"],
+  rememberMe: [Boolean, "boolean"],
 };
 
 module.exports = function check(dto) {

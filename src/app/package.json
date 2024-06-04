@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_ENV=production && node src/index.js",
-    "dev": "set NODE_ENV=development && nodemon src/index.js",
+    "start": "set NODE_ENV=production&&node src/index.js",
+    "dev": "set NODE_ENV=development&&nodemon src/index.js",
     "test": "mocha"
   },
   "author": "",
@@ -16,7 +16,8 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mocha": "^10.4.0",
-    "mongoose": "^8.4.1"
+    "mongoose": "^8.4.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.2"

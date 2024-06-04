@@ -55,7 +55,11 @@ exports.postSignInApi = async function (req, res) {
     let payload = {
       username: foundUser.username,
     };
-    let token = jwt.sign(payload, process.env.SECRET_KEY);
+    let token = jwt.sign(
+      payload,
+      process.env.SECRET_KEY,
+      req.body.rememberMe ? { expiresIn: "14 days" } : { expiresIn: "7 days" }
+    );
 
     return res.status(200).json(token);
   } catch (err) {
