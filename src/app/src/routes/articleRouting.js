@@ -13,4 +13,36 @@ router.post(
   controller.postCreateApi
 );
 
+router.delete(
+  "/:id",
+  authMiddlewares.isAuthenticatedMiddleware,
+  controller.deleteRemoveApi
+);
+
+router.patch(
+  "/:id",
+  authMiddlewares.isAuthenticatedMiddleware,
+  upload.none(),
+  controller.patchEditApi
+);
+
+router.delete(
+  "/:articleId/media",
+  authMiddlewares.isAuthenticatedMiddleware,
+  controller.deleteMediasApi
+);
+
+router.delete(
+  "/:articleId/media/:fileName",
+  authMiddlewares.isAuthenticatedMiddleware,
+  controller.deleteMediaApi
+);
+
+router.post(
+  "/:articleId/media",
+  authMiddlewares.isAuthenticatedMiddleware,
+  upload.single("file"),
+  controller.postCreateMediaApi
+);
+
 module.exports = router;

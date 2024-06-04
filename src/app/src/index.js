@@ -38,7 +38,7 @@ app.all("*", function (req, res, next) {
   next();
 });
 
-app.use("/images", express.static("images"));
+app.use("/content/image", express.static("images"));
 
 // routing
 

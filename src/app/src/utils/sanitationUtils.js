@@ -45,9 +45,9 @@ exports.checkType = function checkType(
   typeOf
 ) {
   return (
-    propertyName in object &&
-    (typeof object[propertyName] === typeOf ||
-      object[propertyName] instanceof instanceOf)
+    !(propertyName in object) ||
+    typeof object[propertyName] === typeOf ||
+    object[propertyName] instanceof instanceOf
   );
 };
 
@@ -56,4 +56,10 @@ exports.checkTypes = function checkTypes(object, types) {
     if (!this.checkType(object, p, types[p][0], types[p][1])) return false;
   }
   return true;
+};
+
+exports.applyObject = function applyObject(source, target) {
+  for (let p in source) {
+    target[p] = source[p];
+  }
 };
