@@ -11,6 +11,9 @@ exports.postCreateApi = async function (req, res) {
   try {
     if (!checkArticleCreateDTO(req.body)) return res.sendStatus(400);
     let medias = (req.files ?? [])
+      .filter((f) => {
+        return f.mimetype.startsWith("image/");
+      })
       .map((f) => {
         return {
           buffer: f.buffer,
@@ -26,6 +29,7 @@ exports.postCreateApi = async function (req, res) {
         );
       });
     let createArticle = {
+      author: req.authenticationData.payload.userId,
       link: req.body.link,
       title: req.body.title,
       content: req.body.content,
