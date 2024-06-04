@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const HASH_SECRET_KEY = process.env.HASH_SECRET_KEY;
 
 const schema = new mongoose.Schema(
   {
@@ -25,7 +24,7 @@ const schema = new mongoose.Schema(
 
 schema.pre("save", function () {
   if (this.isModified("password"))
-    this.password = bcrypt.hashSync(this.password, HASH_SECRET_KEY);
+    this.password = bcrypt.hashSync(this.password, 10);
 });
 
 module.exports = mongoose.model("user", schema);

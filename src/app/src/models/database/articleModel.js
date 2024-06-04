@@ -10,6 +10,8 @@ const schema = new mongoose.Schema(
     link: { type: String, required: true, minlength: 4, maxlength: 128 },
     title: { type: String, required: true, minlength: 4, maxlength: 32 },
     content: { type: String, required: true, minlength: 6, maxlength: 256 },
+    clicks: { type: Number },
+    medias: [{ type: String }],
   },
   { timestamps: true }
 );

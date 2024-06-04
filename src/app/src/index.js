@@ -12,7 +12,12 @@ dotenv.config();
 const PORT = process.env.PORT ?? 5000;
 const DB_URL = process.env.DB_URL;
 if (!DB_URL) throw "No database URL found.";
-if (!process.env.HASH_SECRET_KEY) throw "No hashing secrey key found.";
+if (!process.env.SECRET_KEY) throw "No secret key found.";
+
+// routing
+
+const userRouter = require("./routes/userRouting");
+app.use("/api/user", userRouter);
 
 // boot
 
