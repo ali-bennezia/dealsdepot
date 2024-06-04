@@ -6,6 +6,8 @@ const router = express.Router();
 const controller = require("./../controllers/articleController");
 const authMiddlewares = require("./../middlewares/authMiddlewares");
 
+router.get("/:id", controller.getFindByIdApi);
+
 router.post(
   "",
   authMiddlewares.isAuthenticatedMiddleware,
