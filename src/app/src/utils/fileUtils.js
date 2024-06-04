@@ -28,7 +28,7 @@ exports.storeImageBuffer = function storeImageBuffer(
   let name = `${id}.${extension}`;
   let filePath = path.join("images", name);
   let fd = fs.openSync(filePath, "w");
-  fd.writeSync(fd, buff, 0, sizeInBytes, 0);
-  fd.closeSync(fs);
+  fs.writeSync(fd, buff, 0, sizeInBytes, 0);
+  fs.closeSync(fd);
   return name;
 };

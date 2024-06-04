@@ -18,6 +18,7 @@ const schema = new mongoose.Schema(
       maxlength: 320,
     },
     password: { type: String, required: true, minlength: 8, maxlength: 128 },
+    roles: [{ type: String }],
   },
   { timestamps: true }
 );

@@ -32,10 +32,6 @@ exports.containsOnlyAllProperties = function containsOnlyAllProperties(
   object,
   properties
 ) {
-  console.log(object);
-  console.log(properties);
-  console.log(this.containsAtleastAllProperties(object, properties));
-  console.log(this.containsAnyOtherProperties(object, properties));
   return (
     this.containsAtleastAllProperties(object, properties) &&
     !this.containsAnyOtherProperties(object, properties)

@@ -51,7 +51,10 @@ exports.postSignInApi = async function (req, res) {
     }
 
     let payload = {
+      userId: foundUser._id.toString(),
       username: foundUser.username,
+      roles: foundUser.roles,
+      signedInAtTime: new Date().getTime(),
     };
     let token = jwt.sign(
       payload,

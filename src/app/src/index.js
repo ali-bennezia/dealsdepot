@@ -42,8 +42,11 @@ app.use("/images", express.static("images"));
 
 // routing
 
-const userRouter = require("./routes/userRouting");
-app.use("/api/user", userRouter);
+const userRouting = require("./routes/userRouting");
+const articleRouting = require("./routes/articleRouting");
+
+app.use("/api/user", userRouting);
+app.use("/api/article", articleRouting);
 
 // boot
 
