@@ -1,8 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("./../controllers/userController");
+const authMiddlewares = require("./../middlewares/authMiddlewares");
 
-router.post("/register", controller.postRegisterApi);
-router.post("/signin", controller.postSignInApi);
+router.post(
+  "/register",
+  authMiddlewares.isAnonymousMiddleware,
+  controller.postRegisterApi
+);
+router.post(
+  "/signin",
+  authMiddlewares.isAnonymousMiddleware,
+  controller.postSignInApi
+);
 
 module.exports = router;

@@ -12,6 +12,7 @@ const schema = new mongoose.Schema(
     content: { type: String, required: true, minlength: 6, maxlength: 256 },
     clicks: { type: Number },
     medias: [{ type: String }],
+    tags: [{ type: String }],
   },
   { timestamps: true }
 );
