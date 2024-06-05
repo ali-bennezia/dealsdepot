@@ -1,7 +1,9 @@
 const articleModel = require("./../models/database/articleModel");
 const articleVoteModel = require("./../models/database/articleVoteModel");
+const userModel = require("./../models/database/userModel");
 
 const fileUtils = require("./fileUtils");
+const userUtils = require("./userUtils");
 
 exports.tryDeleteArticleMediasAsync =
   async function tryDeleteArticleMediasAsync(articleId) {
@@ -22,4 +24,25 @@ exports.tryDeleteArticleVotesAsync = async function tryDeleteArticleVotesAsync(
   if (article != null) {
     await articleVoteModel.deleteMany({ article: articleId }).exec();
   }
+};
+
+exports.getArticleOutboundDTOAsync = async function getArticleOutboundDTOAsync(
+  doc
+) {
+  return {
+    ...doc.toObject(),
+    clicks: doc?.clicks ?? 0,
+    views: doc?.views ?? 0,
+    votes: {
+      for: await articleVoteModel
+        .countDocuments({ article: doc._id.toString(), vote: true })
+        .exec(),
+      against: await articleVoteModel
+        .countDocuments({ article: doc._id.toString(), vote: true })
+        .exec(),
+    },
+    authorData: userUtils.getUserOutboundDTO(
+      await userModel.findById(doc.author)
+    ),
+  };
 };

@@ -36,7 +36,9 @@ exports.getFindByIdApi = async function (req, res) {
     return res
       .status(200)
       .json(
-        await articleModel.create(await articleModel.findById(req.params.id))
+        await articleUtils.getArticleOutboundDTOAsync(
+          await articleModel.create(await articleModel.findById(req.params.id))
+        )
       );
   } catch (err) {
     console.error(err);

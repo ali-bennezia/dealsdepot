@@ -19,6 +19,7 @@ const schema = new mongoose.Schema(
     },
     password: { type: String, required: true, minlength: 8, maxlength: 128 },
     roles: [{ type: String }],
+    profilePictureFileName: { type: String, required: false },
   },
   { timestamps: true }
 );
