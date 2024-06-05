@@ -13,7 +13,13 @@ router.get("/:id", controller.getFindByIdApi);
 router.post(
   "/:id/vote/:vote",
   authMiddlewares.isAuthenticatedMiddleware,
-  controller.postArticleVoteApi
+  controller.postArticleCreateVoteApi
+);
+
+router.delete(
+  "/:id/vote",
+  authMiddlewares.isAuthenticatedMiddleware,
+  controller.deleteArticleDeleteVoteApi
 );
 
 router.post(

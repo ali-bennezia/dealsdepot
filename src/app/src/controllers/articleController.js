@@ -123,7 +123,7 @@ exports.getFindByIdApi = async function (req, res) {
  * User must be authenticated.
  * The :vote parameter must be either true or false.
  */
-exports.postArticleVoteApi = async function (req, res) {
+exports.postArticleCreateVoteApi = async function (req, res) {
   try {
     if (
       !("params" in req) ||
@@ -163,6 +163,39 @@ exports.postArticleVoteApi = async function (req, res) {
     return res
       .status(201)
       .json((await articleVoteModel.create(newVote)).toObject());
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+};
+
+/**
+ * DELETE /api/article/:id/vote
+ * Article vote deletion API.
+ * User must be authenticated.
+ */
+exports.deleteArticleDeleteVoteApi = async function (req, res) {
+  try {
+    if (!("params" in req) || !("id" in req.params)) return res.sendStatus(400);
+    let article = await articleModel.findById(req.params.id);
+    if (article == null) return res.sendStatus(404);
+
+    let currentVote = await articleVoteModel
+      .findOne({
+        author: req.authenticationData.payload.userId,
+        article: req.params.id,
+      })
+      .exec();
+    if (currentVote != null) {
+      await articleVoteModel
+        .deleteOne({ _id: currentVote._id.toString() })
+        .exec();
+      --article.totalVotes;
+      await article.save();
+      return res.sendStatus(204);
+    } else {
+      return res.sendStatus(404);
+    }
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
