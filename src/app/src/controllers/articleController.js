@@ -10,6 +10,21 @@ const checkArticleCreateDTO = require("./../models/dtos/article/articleCreateDTO
 const checkArticleEditDTO = require("./../models/dtos/article/articleEditDTO");
 
 /**
+ * GET /api/article
+ * Article search API.
+ */
+exports.getSearch = async function (req, res) {
+  try {
+    if (!("params" in req) || !("id" in req.params)) return res.sendStatus(400);
+    if (!(await articleModel.exists({ _id: req.params.id })))
+      return res.sendStatus(404);
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+};
+
+/**
  * GET /api/article/:id
  * Article get API.
  */
@@ -18,7 +33,11 @@ exports.getFindByIdApi = async function (req, res) {
     if (!("params" in req) || !("id" in req.params)) return res.sendStatus(400);
     if (!(await articleModel.exists({ _id: req.params.id })))
       return res.sendStatus(404);
-    return res.status(200).json(await articleModel.create(await articleModel.findById(req.params.id)));
+    return res
+      .status(200)
+      .json(
+        await articleModel.create(await articleModel.findById(req.params.id))
+      );
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
