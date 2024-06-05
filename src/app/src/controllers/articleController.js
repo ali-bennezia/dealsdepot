@@ -10,14 +10,85 @@ const checkArticleCreateDTO = require("./../models/dtos/article/articleCreateDTO
 const checkArticleEditDTO = require("./../models/dtos/article/articleEditDTO");
 
 /**
- * GET /api/article
+ * GET /api/article?query=..&minclicks=..&maxclicks=..&minviews=..&maxviews=..&tags=..&sortBy=..&sortOrder=..
  * Article search API.
+ * The sortOrder parameter must be either 1 or -1.
  */
+const sortFilters = ["title", "content", "clicks", "views", "totalVotes"];
 exports.getSearch = async function (req, res) {
   try {
-    if (!("params" in req) || !("id" in req.params)) return res.sendStatus(400);
-    if (!(await articleModel.exists({ _id: req.params.id })))
-      return res.sendStatus(404);
+    let filterOptions = {},
+      sortOptions = {};
+
+    if ("query" in req) {
+      let queryObject = req.query;
+      if ("query" in queryObject && queryObject?.query != "") {
+        filterOptions = { $text: { $search: queryObject.query } };
+      }
+      if ("minclicks" in queryObject || "maxclicks" in queryObject) {
+        let minClicks = Number(queryObject?.minclicks);
+        let maxClicks = Number(queryObject?.maxclicks);
+
+        filterOptions = {
+          ...filterOptions,
+          clicks: {
+            $gte: minClicks,
+            $lte: maxClicks,
+          },
+        };
+        sanitationUtils.trimPropertiesByPredicate(
+          filterOptions.clicks,
+          (val) => val == undefined || val == NaN || val == null || isNaN(val)
+        );
+        if (filterOptions.clicks == {}) delete filterOptions.clicks;
+      }
+      if ("minviews" in queryObject || "maxviews" in queryObject) {
+        let minViews = Number(queryObject?.minviews);
+        let maxViews = Number(queryObject?.maxviews);
+        filterOptions = {
+          ...filterOptions,
+          views: {
+            $gte: minViews,
+            $lte: maxViews,
+          },
+        };
+        sanitationUtils.trimPropertiesByPredicate(
+          filterOptions.views,
+          (val) => val == undefined || val == NaN || val == null || isNaN(val)
+        );
+        if (filterOptions.views == {}) delete filterOptions.views;
+      }
+      if ("tags" in queryObject) {
+        let tags = [];
+        try {
+          tags = JSON.parse(queryObject.tags);
+        } catch (jsonErr) {
+          tags = null;
+        }
+        if (!Array.isArray(tags) || tags == null) return res.sendStatus(400);
+        filterOptions = {
+          ...filterOptions,
+          tags: { $in: tags },
+        };
+      }
+
+      if ("sortBy" in queryObject) {
+        if (!sortFilters.includes(queryObject.sortBy))
+          return res.sendStatus(400);
+        let sortOrder = Number(queryObject?.sortOrder) ?? 1;
+        if (sortOrder !== -1 && sortOrder !== 1) sortOrder = 1;
+        sortOptions[queryObject.sortBy] = sortOrder;
+      }
+    }
+
+    if (sortOptions == {}) sortOptions = undefined;
+
+    let results = await articleModel.paginate(filterOptions, {
+      page: 0,
+      limit: 10,
+      sort: sortOptions,
+    });
+    return res.status(200).json(results.docs);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -65,7 +136,13 @@ exports.postCreateApi = async function (req, res) {
       tags: req.body.tags.split(" "),
       medias: medias,
     };
-    return res.status(201).json(await articleModel.create(createArticle));
+    return res
+      .status(201)
+      .json(
+        await articleUtils.getArticleOutboundDTOAsync(
+          await articleModel.create(createArticle)
+        )
+      );
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -81,7 +158,7 @@ exports.postCreateApi = async function (req, res) {
 exports.deleteRemoveApi = async function (req, res) {
   try {
     if (!("params" in req) || !("id" in req.params)) return res.sendStatus(400);
-    if (!(await articleModel.exists({ _id: req.params.id })))
+    if ((await articleModel.exists({ _id: req.params.id })) == null)
       return res.sendStatus(404);
 
     let articleId = req.params.id;
@@ -97,6 +174,7 @@ exports.deleteRemoveApi = async function (req, res) {
       return res.sendStatus(403);
 
     await articleUtils.tryDeleteArticleMediasAsync(articleId);
+    await articleUtils.tryDeleteArticleVotesAsync(articleId);
     await articleModel.deleteOne({ _id: articleId });
 
     return res.sendStatus(204);

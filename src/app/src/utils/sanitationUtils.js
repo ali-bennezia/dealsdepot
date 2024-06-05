@@ -63,3 +63,12 @@ exports.applyObject = function applyObject(source, target) {
     target[p] = source[p];
   }
 };
+
+exports.trimPropertiesByPredicate = function trimPropertiesByPredicate(
+  object,
+  predicate
+) {
+  for (let p in object) {
+    if (predicate(object[p])) delete object[p];
+  }
+};

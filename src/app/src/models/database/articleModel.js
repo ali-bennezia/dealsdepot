@@ -11,14 +11,16 @@ const schema = new mongoose.Schema(
     link: { type: String, required: true, minlength: 4, maxlength: 128 },
     title: { type: String, required: true, minlength: 4, maxlength: 32 },
     content: { type: String, required: true, minlength: 6, maxlength: 256 },
-    clicks: { type: Number },
-    views: { type: Number },
+    clicks: { type: Number, required: true, default: 0 },
+    views: { type: Number, required: true, default: 0 },
+    totalVotes: { type: Number, required: true, default: 0 },
     medias: [{ type: String }],
     tags: [{ type: String }],
   },
   { timestamps: true }
 );
 
+schema.index({ title: "text", content: "text" });
 schema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("article", schema);

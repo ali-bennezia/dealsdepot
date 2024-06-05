@@ -38,7 +38,7 @@ exports.getArticleOutboundDTOAsync = async function getArticleOutboundDTOAsync(
         .countDocuments({ article: doc._id.toString(), vote: true })
         .exec(),
       against: await articleVoteModel
-        .countDocuments({ article: doc._id.toString(), vote: true })
+        .countDocuments({ article: doc._id.toString(), vote: false })
         .exec(),
     },
     authorData: userUtils.getUserOutboundDTO(
