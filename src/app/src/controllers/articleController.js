@@ -10,15 +10,17 @@ const checkArticleCreateDTO = require("./../models/dtos/article/articleCreateDTO
 const checkArticleEditDTO = require("./../models/dtos/article/articleEditDTO");
 
 /**
- * GET /api/article?query=..&minclicks=..&maxclicks=..&minviews=..&maxviews=..&tags=..&sortBy=..&sortOrder=..
+ * GET /api/article?query=..&minclicks=..&maxclicks=..&minviews=..&maxviews=..&tags=..&sortBy=..&sortOrder=..&page=..
  * Article search API.
  * The sortOrder parameter must be either 1 or -1.
+ * The page parameter is 1-indexed.
  */
 const sortFilters = ["title", "content", "clicks", "views", "totalVotes"];
 exports.getSearch = async function (req, res) {
   try {
     let filterOptions = {},
       sortOptions = {};
+    let page = 1;
 
     if ("query" in req) {
       let queryObject = req.query;
@@ -79,12 +81,18 @@ exports.getSearch = async function (req, res) {
         if (sortOrder !== -1 && sortOrder !== 1) sortOrder = 1;
         sortOptions[queryObject.sortBy] = sortOrder;
       }
+      if ("page" in queryObject) {
+        let pageData = Number(queryObject?.page);
+        if (!isNaN(pageData)) {
+          page = pageData;
+        }
+      }
     }
 
     if (sortOptions == {}) sortOptions = undefined;
 
     let results = await articleModel.paginate(filterOptions, {
-      page: 0,
+      page: page,
       limit: 10,
       sort: sortOptions,
     });
