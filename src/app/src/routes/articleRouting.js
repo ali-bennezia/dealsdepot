@@ -11,6 +11,12 @@ router.get("", controller.getSearch);
 router.get("/:id", controller.getFindByIdApi);
 
 router.post(
+  "/:id/vote/:vote",
+  authMiddlewares.isAuthenticatedMiddleware,
+  controller.postArticleVoteApi
+);
+
+router.post(
   "",
   authMiddlewares.isAuthenticatedMiddleware,
   upload.array("images"),

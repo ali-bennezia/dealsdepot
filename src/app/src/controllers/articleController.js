@@ -118,6 +118,58 @@ exports.getFindByIdApi = async function (req, res) {
 };
 
 /**
+ * POST /api/article/:id/vote/:vote
+ * Article voting API.
+ * User must be authenticated.
+ * The :vote parameter must be either true or false.
+ */
+exports.postArticleVoteApi = async function (req, res) {
+  try {
+    if (
+      !("params" in req) ||
+      !("id" in req.params) ||
+      !("vote" in req.params) ||
+      !["true", "false", true, false].includes(req.params.vote)
+    )
+      return res.sendStatus(400);
+    if (!(await articleModel.exists({ _id: req.params.id })))
+      return res.sendStatus(404);
+    let setVote =
+      req?.params?.vote == "false" ? false : Boolean(req.params.vote);
+
+    let currentVote = await articleVoteModel
+      .findOne({
+        author: req.authenticationData.payload.userId,
+        article: req.params.id,
+      })
+      .exec();
+    let foundVote = false;
+    if (currentVote != null) {
+      await articleVoteModel
+        .deleteOne({ _id: currentVote._id.toString() })
+        .exec();
+      foundVote = true;
+    }
+    let newVote = {
+      author: req.authenticationData.payload.userId,
+      article: req.params.id,
+      vote: setVote,
+    };
+    if (foundVote == false) {
+      let article = await articleModel.findById(req.params.id);
+      ++article.totalVotes;
+      await article.save();
+    }
+    return res
+      .status(201)
+      .json((await articleVoteModel.create(newVote)).toObject());
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+};
+
+/**
  * POST /api/article
  * Article creation API.
  * Takes in multipart/form-data.
