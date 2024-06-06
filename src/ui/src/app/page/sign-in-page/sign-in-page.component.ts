@@ -20,9 +20,24 @@ export class SignInPageComponent {
     private router: Router
   ) {
     this.group = builder.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      rememberMe: [false, [Validators.required]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(320),
+          Validators.email,
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(128),
+        ],
+      ],
+      rememberMe: [false],
     });
   }
 
@@ -30,7 +45,17 @@ export class SignInPageComponent {
     return this.group.value;
   }
 
-  handleError(status: number) {}
+  errorDisplay: string = '';
+  handleError(status: number) {
+    switch (status) {
+      case 401:
+        this.errorDisplay = 'Incorrect credentials.';
+        break;
+      default:
+        this.errorDisplay = 'Internal server error.';
+        break;
+    }
+  }
 
   onSubmit = (e: Event) => {
     this.loading = true;

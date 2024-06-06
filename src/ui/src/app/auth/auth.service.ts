@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { UserLoginOutboundDto } from './data/dtos/outbound/user-login-outbound-dto';
 import { environment } from 'src/environments/environment';
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthOperationResult } from './data/auth-operation-result';
 import { AuthSession } from './data/auth-session';
@@ -13,6 +13,14 @@ import { UserRegisterOutboundDto } from './data/dtos/outbound/user-register-outb
   providedIn: 'root',
 })
 export class AuthService {
+  private onLoginSource: Subject<AuthSession> = new Subject();
+  private onRegisterSource: Subject<void> = new Subject();
+  private onLogoutSource: Subject<void> = new Subject();
+
+  onLogin$: Observable<AuthSession> = this.onLoginSource.asObservable();
+  onRegister$: Observable<void> = this.onRegisterSource.asObservable();
+  onLogout$: Observable<void> = this.onLogoutSource.asObservable();
+
   constructor(private http: HttpClient) {}
 
   private _session: AuthSession | null = null;
@@ -43,6 +51,7 @@ export class AuthService {
         switchMap((data) => {
           if (data instanceof HttpResponse) {
             this._session = data.body;
+            if (this._session != null) this.onLoginSource.next(this._session);
             return of({
               success: true,
               status: data.status,
@@ -54,6 +63,7 @@ export class AuthService {
 
   logout() {
     this._session = null;
+    this.onLogoutSource.next();
   }
 
   register(dto: UserRegisterOutboundDto): Observable<AuthOperationResult> {
@@ -73,6 +83,7 @@ export class AuthService {
         }),
         switchMap((data) => {
           if (data instanceof HttpResponse) {
+            this.onRegisterSource.next();
             return of({
               success: true,
               status: data.status,
