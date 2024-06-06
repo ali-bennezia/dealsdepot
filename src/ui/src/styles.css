@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input[type="email"].ng-invalid.ng-touched,
+input[type="text"].ng-invalid.ng-touched,
+input[type="password"].ng-invalid.ng-touched {
+  outline: solid 2px rgba(255, 0, 0, 0.397);
+}

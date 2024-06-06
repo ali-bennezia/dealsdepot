@@ -11,6 +11,11 @@ import { ROUTES } from './routing/routes';
 import { RegisterPageComponent } from './page/register-page/register-page.component';
 import { SignInPageComponent } from './page/sign-in-page/sign-in-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FooterComponent } from './layout/footer/footer.component';
+import { PrivacyPolicyPageComponent } from './page/privacy-policy-page/privacy-policy-page.component';
+import { LicensingPageComponent } from './page/licensing-page/licensing-page.component';
+import { ContactPageComponent } from './page/contact-page/contact-page.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,8 +26,18 @@ import { HttpClientModule } from '@angular/common/http';
     NotFoundPageComponent,
     RegisterPageComponent,
     SignInPageComponent,
+    FooterComponent,
+    PrivacyPolicyPageComponent,
+    LicensingPageComponent,
+    ContactPageComponent,
   ],
-  imports: [BrowserModule, RouterModule.forRoot(ROUTES), HttpClientModule],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(ROUTES),
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
