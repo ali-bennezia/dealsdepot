@@ -62,7 +62,13 @@ exports.postSignInApi = async function (req, res) {
       req.body.rememberMe ? { expiresIn: "14 days" } : { expiresIn: "7 days" }
     );
 
-    return res.status(200).json(token);
+    return res.status(200).json({
+      id: foundUser._id.toString(),
+      token: token,
+      username: foundUser.username,
+      roles: foundUser?.roles ?? [],
+      profilePictureFileName: foundUser?.profilePictureFileName ?? null,
+    });
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
