@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/auth.service';
 
-import { UserLoginOutboundDto } from 'src/app/auth/data/dtos/outbound/user-login-outbound-dto';
+import { UserLoginOutboundDto } from 'src/app/auth/data/dtos/outbound/user/user-login-outbound-dto';
 import { AuthOperationResult } from 'src/app/auth/data/auth-operation-result';
 import { Router } from '@angular/router';
 

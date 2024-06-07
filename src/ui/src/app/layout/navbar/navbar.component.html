@@ -74,8 +74,9 @@
               ]"
               [routerLinkActiveOptions]="{ exact: true }"
               ariaCurrentWhenActive="page"
-              >Home</a
             >
+              Home
+            </a>
             <a
               class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               aria-current="page"
@@ -87,8 +88,9 @@
                 'hover:bg-gray-950'
               ]"
               ariaCurrentWhenActive="page"
-              >Search</a
             >
+              Search
+            </a>
             <a
               class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               aria-current="page"
@@ -100,8 +102,39 @@
                 'hover:bg-gray-950'
               ]"
               ariaCurrentWhenActive="page"
-              >About</a
             >
+              About
+            </a>
+            <ng-container *ngIf="authService.isAuthenticated">
+              <a
+                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                aria-current="page"
+                [routerLink]="['/article', 'add']"
+                [routerLinkActive]="[
+                  'active',
+                  'bg-gray-900',
+                  'text-white',
+                  'hover:bg-gray-950'
+                ]"
+                ariaCurrentWhenActive="page"
+              >
+                Add article
+              </a>
+              <a
+                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                aria-current="page"
+                [routerLink]="['/article', 'list']"
+                [routerLinkActive]="[
+                  'active',
+                  'bg-gray-900',
+                  'text-white',
+                  'hover:bg-gray-950'
+                ]"
+                ariaCurrentWhenActive="page"
+              >
+                My articles
+              </a>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -169,7 +202,6 @@
                 id="user-menu-button"
                 aria-expanded="false"
                 aria-haspopup="true"
-                data-dropdown-toggle="user-menu-dropdown"
                 (click)="toggleUserMenu($event)"
               >
                 <span class="absolute -inset-1.5"></span>

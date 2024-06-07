@@ -25,7 +25,7 @@ router.delete(
 router.post(
   "",
   authMiddlewares.isAuthenticatedMiddleware,
-  upload.array("images"),
+  upload.array("files"),
   controller.postCreateApi
 );
 

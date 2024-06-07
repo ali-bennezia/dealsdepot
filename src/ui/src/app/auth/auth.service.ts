@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { UserLoginOutboundDto } from './data/dtos/outbound/user-login-outbound-dto';
+import { UserLoginOutboundDto } from './data/dtos/outbound/user/user-login-outbound-dto';
 import { environment } from 'src/environments/environment';
 
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthOperationResult } from './data/auth-operation-result';
 import { AuthSession } from './data/auth-session';
-import { UserRegisterOutboundDto } from './data/dtos/outbound/user-register-outbound-dto';
+import { UserRegisterOutboundDto } from './data/dtos/outbound/user/user-register-outbound-dto';
 
 @Injectable({
   providedIn: 'root',

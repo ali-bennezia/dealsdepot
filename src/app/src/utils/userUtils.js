@@ -4,5 +4,6 @@ exports.getUserOutboundDTO = function getUserOutboundDTO(doc) {
     username: doc.username,
     profilePictureFileName: doc?.profilePictureFileName ?? null,
     roles: doc.roles,
+    createdAtTime: doc.createdAt.getTime(),
   };
 };
