@@ -23,7 +23,31 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  tryFetchSession() {
+    let previousSess = localStorage.getItem('session');
+    if (previousSess) {
+      this._session = JSON.parse(previousSess);
+    }
+  }
+
+  saveSession() {
+    if (this._session != null) {
+      localStorage.setItem('session', JSON.stringify(this._session));
+    } else {
+      localStorage.removeItem('session');
+    }
+  }
+
   private _session: AuthSession | null = null;
+
+  get session(): AuthSession | null {
+    return this._session;
+  }
+
+  set session(val: AuthSession | null) {
+    this._session = val;
+    this.saveSession();
+  }
 
   get isAuthenticated(): boolean {
     return this._session !== null;
@@ -31,6 +55,14 @@ export class AuthService {
 
   get isAnonymous(): boolean {
     return this._session === null;
+  }
+
+  getProfilePictureSource(): string {
+    return this.isAnonymous || this.session!.profilePictureFileName == null
+      ? '/assets/images/anonymous-profile.png'
+      : `${environment.backendUri}/content/image/${
+          this.session!.profilePictureFileName
+        }`;
   }
 
   login(dto: UserLoginOutboundDto): Observable<AuthOperationResult> {
@@ -50,7 +82,7 @@ export class AuthService {
         }),
         switchMap((data) => {
           if (data instanceof HttpResponse) {
-            this._session = data.body;
+            this.session = data.body;
             if (this._session != null) this.onLoginSource.next(this._session);
             return of({
               success: true,
@@ -62,7 +94,7 @@ export class AuthService {
   }
 
   logout() {
-    this._session = null;
+    this.session = null;
     this.onLogoutSource.next();
   }
 

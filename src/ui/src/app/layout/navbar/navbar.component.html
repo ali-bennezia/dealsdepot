@@ -79,6 +79,19 @@
             <a
               class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               aria-current="page"
+              [routerLink]="['/search']"
+              [routerLinkActive]="[
+                'active',
+                'bg-gray-900',
+                'text-white',
+                'hover:bg-gray-950'
+              ]"
+              ariaCurrentWhenActive="page"
+              >Search</a
+            >
+            <a
+              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+              aria-current="page"
               [routerLink]="['/about']"
               [routerLinkActive]="[
                 'active',
@@ -86,7 +99,6 @@
                 'text-white',
                 'hover:bg-gray-950'
               ]"
-              [routerLinkActiveOptions]="{ exact: true }"
               ariaCurrentWhenActive="page"
               >About</a
             >
@@ -164,7 +176,7 @@
                 <span class="sr-only">Open user menu</span>
                 <img
                   class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  [src]="authService.getProfilePictureSource()"
                   alt=""
                 />
               </button>
@@ -213,7 +225,7 @@
                 >Settings</a
               >
               <button
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
                 role="menuitem"
                 tabindex="2"
                 id="user-menu-item-2"
@@ -244,30 +256,45 @@
       <a
         class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         aria-current="page"
+        [routerLink]="['/search']"
+        [routerLinkActive]="['bg-gray-900', 'text-white', 'hover:bg-gray-950']"
+        ariaCurrentWhenActive="page"
+        >Search</a
+      >
+      <a
+        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        aria-current="page"
         [routerLink]="['/about']"
         [routerLinkActive]="['bg-gray-900', 'text-white', 'hover:bg-gray-950']"
-        [routerLinkActiveOptions]="{ exact: true }"
         ariaCurrentWhenActive="page"
         >About</a
       >
-      <a
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-        aria-current="page"
-        [routerLink]="['/signin']"
-        [routerLinkActive]="['bg-gray-900', 'text-white', 'hover:bg-gray-950']"
-        [routerLinkActiveOptions]="{ exact: true }"
-        ariaCurrentWhenActive="page"
-        >Sign In</a
-      >
-      <a
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-        aria-current="page"
-        [routerLink]="['/register']"
-        [routerLinkActive]="['bg-gray-900', 'text-white', 'hover:bg-gray-950']"
-        [routerLinkActiveOptions]="{ exact: true }"
-        ariaCurrentWhenActive="page"
-        >Register</a
-      >
+      <ng-container *ngIf="authService.isAnonymous">
+        <a
+          class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+          aria-current="page"
+          [routerLink]="['/signin']"
+          [routerLinkActive]="[
+            'bg-gray-900',
+            'text-white',
+            'hover:bg-gray-950'
+          ]"
+          ariaCurrentWhenActive="page"
+          >Sign In</a
+        >
+        <a
+          class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+          aria-current="page"
+          [routerLink]="['/register']"
+          [routerLinkActive]="[
+            'bg-gray-900',
+            'text-white',
+            'hover:bg-gray-950'
+          ]"
+          ariaCurrentWhenActive="page"
+          >Register</a
+        >
+      </ng-container>
     </div>
   </div>
 </nav>
