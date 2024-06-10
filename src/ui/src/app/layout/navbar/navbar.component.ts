@@ -1,9 +1,11 @@
-import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 
 import 'flowbite';
 import { Subscription } from 'rxjs';
+
+import { Flowbite } from 'src/app/utils/flowbiteUtils';
 
 @Component({
   selector: 'app-navbar',
@@ -11,25 +13,12 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./navbar.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class NavbarComponent implements OnDestroy {
+@Flowbite()
+export class NavbarComponent {
   onClickSignOut = (e: Event) => {
     this.authService.logout();
     this.router.navigate(['/signin']);
   };
 
-  showUserMenu: boolean = false;
-  toggleUserMenu = (e: Event) => {
-    this.showUserMenu = !this.showUserMenu;
-  };
-
-  onLogoutSubscription!: Subscription;
-  constructor(public authService: AuthService, private router: Router) {
-    this.onLogoutSubscription = this.authService.onLogout$.subscribe(() => {
-      this.showUserMenu = false;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.onLogoutSubscription.unsubscribe();
-  }
+  constructor(public authService: AuthService, private router: Router) {}
 }

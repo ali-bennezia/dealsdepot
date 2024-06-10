@@ -8,9 +8,10 @@ const articleVoteModel = require("./../models/database/articleVoteModel");
 
 const checkArticleCreateDTO = require("./../models/dtos/article/articleCreateDTO");
 const checkArticleEditDTO = require("./../models/dtos/article/articleEditDTO");
+const { query } = require("express");
 
 /**
- * GET /api/article?query=..&minclicks=..&maxclicks=..&minviews=..&maxviews=..&tags=..&sortBy=..&sortOrder=..&page=..
+ * GET /api/article?query=..&minclicks=..&maxclicks=..&minviews=..&maxviews=..&tags=..&sortBy=..&sortOrder=..&page=..&author=..
  * Article search API.
  * The sortOrder parameter must be either 1 or -1.
  * The page parameter is 1-indexed.
@@ -26,6 +27,9 @@ exports.getSearch = async function (req, res) {
       let queryObject = req.query;
       if ("query" in queryObject && queryObject?.query != "") {
         filterOptions = { $text: { $search: queryObject.query } };
+      }
+      if ("author" in queryObject && queryObject?.author != "") {
+        filterOptions = { ...filterOptions, author: queryObject.author };
       }
       if ("minclicks" in queryObject || "maxclicks" in queryObject) {
         let minClicks = Number(queryObject?.minclicks);

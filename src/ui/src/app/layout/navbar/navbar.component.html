@@ -109,20 +109,6 @@
               <a
                 class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 aria-current="page"
-                [routerLink]="['/article', 'add']"
-                [routerLinkActive]="[
-                  'active',
-                  'bg-gray-900',
-                  'text-white',
-                  'hover:bg-gray-950'
-                ]"
-                ariaCurrentWhenActive="page"
-              >
-                Add article
-              </a>
-              <a
-                class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                aria-current="page"
                 [routerLink]="['/article', 'list']"
                 [routerLinkActive]="[
                   'active',
@@ -202,7 +188,7 @@
                 id="user-menu-button"
                 aria-expanded="false"
                 aria-haspopup="true"
-                (click)="toggleUserMenu($event)"
+                data-dropdown-toggle="user-menu-dropdown"
               >
                 <span class="absolute -inset-1.5"></span>
                 <span class="sr-only">Open user menu</span>
@@ -225,13 +211,12 @@
               To: "transform opacity-0 scale-95"
           -->
             <div
-              class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="userMenuButton"
               tabindex="-1"
-              id="user-menu-mropdown"
-              [ngClass]="{ hidden: !this.showUserMenu }"
+              id="user-menu-dropdown"
             >
               <!-- Active: "bg-gray-100", Not Active: "" -->
               <a
@@ -325,6 +310,20 @@
           ]"
           ariaCurrentWhenActive="page"
           >Register</a
+        >
+      </ng-container>
+      <ng-container *ngIf="authService.isAuthenticated">
+        <a
+          class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+          aria-current="page"
+          [routerLink]="['/article', 'add']"
+          [routerLinkActive]="[
+            'bg-gray-900',
+            'text-white',
+            'hover:bg-gray-950'
+          ]"
+          ariaCurrentWhenActive="page"
+          >My articles</a
         >
       </ng-container>
     </div>

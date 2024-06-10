@@ -11,12 +11,46 @@ import { environment } from 'src/environments/environment';
 
 import { Observable, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
+import { ParamMap } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArticleService {
   constructor(private http: HttpClient, private authService: AuthService) {}
+
+  private allowedFetchParams: string[] = [
+    'query',
+    'minclicks',
+    'maxclicks',
+    'minviews',
+    'maxviews',
+    'tags',
+    'sortBy',
+    'sortOrder',
+    'page',
+    'author',
+  ];
+
+  getArticles(params: ParamMap): Observable<ArticleInboundDto[]> {
+    let searchParams = new URLSearchParams();
+    for (let p of this.allowedFetchParams) {
+      if (params.has(p)) {
+        searchParams.append(p, params.get(p)!);
+      }
+    }
+    let searchParamsStr = searchParams.toString();
+    return this.http.get<ArticleInboundDto[]>(
+      `${environment.backendUri}/api/article${
+        searchParamsStr.trim() == '' ? '' : '?'
+      }${searchParamsStr}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
 
   create(
     article: ArticleCreateOutboundDto,

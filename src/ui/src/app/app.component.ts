@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { initFlowbite } from 'flowbite';
 import { AuthService } from './auth/auth.service';
 
@@ -15,6 +20,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     initFlowbite();
+
     this.authService.tryFetchSession();
   }
 }
