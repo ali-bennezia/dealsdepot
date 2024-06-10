@@ -32,7 +32,7 @@ export class ArticleService {
     'author',
   ];
 
-  getArticles(params: ParamMap): Observable<ArticleInboundDto[]> {
+  getArticles(params: ParamMap): Observable<ArticleOperationResult> {
     let searchParams = new URLSearchParams();
     for (let p of this.allowedFetchParams) {
       if (params.has(p)) {
@@ -40,16 +40,64 @@ export class ArticleService {
       }
     }
     let searchParamsStr = searchParams.toString();
-    return this.http.get<ArticleInboundDto[]>(
-      `${environment.backendUri}/api/article${
-        searchParamsStr.trim() == '' ? '' : '?'
-      }${searchParamsStr}`,
-      {
+    return this.http
+      .get<ArticleInboundDto[]>(
+        `${environment.backendUri}/api/article${
+          searchParamsStr.trim() == '' ? '' : '?'
+        }${searchParamsStr}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          observe: 'response',
+        }
+      )
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
+  }
+
+  getArticle(id: string): Observable<ArticleOperationResult> {
+    return this.http
+      .get<ArticleInboundDto>(`${environment.backendUri}/api/article/${id}`, {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
-    );
+        observe: 'response',
+      })
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
   }
 
   create(
@@ -61,6 +109,40 @@ export class ArticleService {
       .post<ArticleInboundDto>(
         `${environment.backendUri}/api/article`,
         formData,
+        {
+          headers: {
+            Authorization: `Bearer ${this.authService.session?.token}`,
+          },
+          observe: 'response',
+        }
+      )
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
+  }
+
+  deleteMedia(
+    id: string,
+    mediaFileName: string
+  ): Observable<ArticleOperationResult> {
+    return this.http
+      .delete<ArticleInboundDto>(
+        `${environment.backendUri}/api/article/${id}/media/${mediaFileName}`,
         {
           headers: {
             Authorization: `Bearer ${this.authService.session?.token}`,

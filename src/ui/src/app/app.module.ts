@@ -22,6 +22,8 @@ import { SearchPageComponent } from './page/search-page/search-page.component';
 import { ArticleAddPageComponent } from './page/article/article-add-page/article-add-page.component';
 import { ArticleDetailsPageComponent } from './page/article/article-details-page/article-details-page.component';
 import { ArticleListPageComponent } from './page/article/article-list-page/article-list-page.component';
+import { NgIcon, NgIconsModule } from '@ng-icons/core';
+import { ionTrash } from '@ng-icons/ionicons';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { ArticleListPageComponent } from './page/article/article-list-page/artic
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    NgIconsModule.withIcons({ ionTrash }),
   ],
   providers: [],
   bootstrap: [AppComponent],

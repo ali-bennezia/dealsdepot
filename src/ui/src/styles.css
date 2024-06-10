@@ -8,3 +8,41 @@ input[type="password"].ng-invalid.ng-touched,
 textarea.ng-invalid.ng-touched {
   outline: solid 2px rgba(255, 0, 0, 0.397);
 }
+
+button:disabled {
+  opacity: 0.5;
+}
+
+.article-media {
+  border-radius: 6px;
+  outline: solid 0px rgba(0, 0, 0, 0);
+
+  transition: outline 200ms ease-in;
+}
+
+.article-media:hover {
+  outline: solid 3px rgba(0, 0, 0, 0.13);
+}
+
+.article-media .popup-btn {
+  opacity: 0;
+  transition: 200ms opacity ease-in;
+}
+
+.article-media:hover .popup-btn {
+  opacity: 1;
+}
+
+.popup-btn {
+  background-color: rgb(155, 0, 0);
+  color: white;
+  outline: solid 4px rgba(0, 0, 0, 0.349);
+  scale: 1;
+  transition: 100ms scale ease-in;
+}
+
+.popup-btn:hover {
+  cursor: pointer;
+  scale: 1.2;
+  transition: 100ms scale ease-out;
+}

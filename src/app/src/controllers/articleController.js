@@ -95,12 +95,19 @@ exports.getSearch = async function (req, res) {
 
     if (sortOptions == {}) sortOptions = undefined;
 
-    let results = await articleModel.paginate(filterOptions, {
+    let rawResults = await articleModel.paginate(filterOptions, {
       page: page,
       limit: 10,
       sort: sortOptions,
     });
-    return res.status(200).json(results.docs);
+
+    let resultsArticles = await Promise.all(
+      rawResults.docs.map(async function (a) {
+        return await articleUtils.getArticleOutboundDTOAsync(a);
+      })
+    );
+
+    return res.status(200).json(resultsArticles);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -415,6 +422,8 @@ exports.deleteMediaApi = async function (req, res) {
       !("fileName" in req.params)
     )
       return res.sendStatus(400);
+    console.log(req.params);
+
     if (!(await articleModel.exists({ _id: req.params.articleId })))
       return res.sendStatus(404);
 
@@ -424,6 +433,7 @@ exports.deleteMediaApi = async function (req, res) {
     let authorRoles = author?.roles ?? [];
     let medias = article?.medias ?? [];
     let fileName = req.params.fileName;
+    console.log("b");
 
     if (
       (author == null ||
@@ -431,6 +441,8 @@ exports.deleteMediaApi = async function (req, res) {
       !authorRoles.includes("admin")
     )
       return res.sendStatus(403);
+
+    console.log("c");
 
     if (!medias.includes(fileName)) return res.sendStatus(404);
 
