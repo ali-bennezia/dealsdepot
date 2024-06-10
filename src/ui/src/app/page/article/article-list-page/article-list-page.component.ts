@@ -47,7 +47,6 @@ export class ArticleListPageComponent implements OnInit {
     this.articleService.getArticles(paramMap).subscribe((res) => {
       if (res.success) {
         this.articles = res.data;
-        console.log(this.articles);
       } else {
         // TODO: Handle error
       }
