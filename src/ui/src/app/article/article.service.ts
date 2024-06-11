@@ -9,7 +9,7 @@ import { ArticleOperationResult } from './data/article-operation-result';
 import { ArticleInboundDto } from './data/dtos/inbound/article-inbound-dto';
 import { environment } from 'src/environments/environment';
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { ParamMap } from '@angular/router';
 
@@ -168,5 +168,46 @@ export class ArticleService {
           } else return of(resp);
         })
       );
+  }
+
+  createMedias(
+    id: string,
+    files: File[]
+  ): Observable<ArticleOperationResult[]> {
+    return forkJoin(
+      files.map((f) => {
+        let formData = new FormData();
+        formData.append('file', f);
+        return this.http
+          .post<string>(
+            `${environment.backendUri}/api/article/${id}/media`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${this.authService.session?.token}`,
+              },
+              observe: 'response',
+            }
+          )
+          .pipe(
+            catchError((err) => {
+              return of({
+                success: false,
+                status: err.status,
+                data: err.body,
+              });
+            }),
+            switchMap((resp) => {
+              if (resp instanceof HttpResponse) {
+                return of({
+                  success: true,
+                  status: resp.status,
+                  data: resp.body,
+                });
+              } else return of(resp);
+            })
+          );
+      })
+    );
   }
 }

@@ -364,7 +364,7 @@ exports.postCreateMediaApi = async function (req, res) {
 
     await article.save();
 
-    return res.sendStatus(201);
+    return res.status(201).json(newMedia);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);

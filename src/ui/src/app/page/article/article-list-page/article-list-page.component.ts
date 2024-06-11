@@ -96,4 +96,33 @@ export class ArticleListPageComponent implements OnInit {
         }
       });
   }
+
+  onDragOverEditMedia = (ev: Event) => {
+    ev.preventDefault();
+  };
+
+  onDropEditMedia = (article: ArticleInboundDto, ev: Event) => {
+    ev.preventDefault();
+    let dropEv = ev as DragEvent;
+    let files: File[] = [...((dropEv.dataTransfer?.files as any) ?? [])];
+    this.addArticleMedias(article, files);
+  };
+
+  onChangeEditMedia = (article: ArticleInboundDto, ev: Event) => {
+    ev.preventDefault();
+    let inp = ev.target as HTMLInputElement;
+    let files: File[] = [...(inp.files == null ? [] : (inp.files as any))];
+    this.addArticleMedias(article, files);
+  };
+
+  addArticleMedias = (article: ArticleInboundDto, files: File[]) => {
+    this.articleService.createMedias(article.id, files).subscribe((results) => {
+      results.forEach((res) => {
+        if (!res.success) {
+          //TODO: Handle error
+        }
+      });
+      this.refetchEditedArticle();
+    });
+  };
 }
