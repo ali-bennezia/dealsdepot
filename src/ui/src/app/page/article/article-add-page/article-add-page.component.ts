@@ -77,7 +77,7 @@ export class ArticleAddPageComponent {
     let fileList = this.fileInputElement.nativeElement.files as any;
     let files: File[] = [...fileList];
     this.articleService
-      .create(this.getDTO(), files)
+      .createArticle(this.getDTO(), files)
       .subscribe((result: ArticleOperationResult) => {
         if (result.success) {
           if (result.data) {

@@ -322,9 +322,11 @@ exports.patchEditApi = async function (req, res) {
     article.medias = fileUtils.storeImageFiles(req.files ?? []);*/
     sanitationUtils.applyObject(req.body, article);
 
-    await article.save();
+    let doc = await article.save();
 
-    return res.sendStatus(200);
+    return res
+      .status(200)
+      .json(await articleUtils.getArticleOutboundDTOAsync(doc));
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);

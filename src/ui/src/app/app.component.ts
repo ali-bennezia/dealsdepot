@@ -19,8 +19,7 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    initFlowbite();
-
     this.authService.tryFetchSession();
+    initFlowbite();
   }
 }

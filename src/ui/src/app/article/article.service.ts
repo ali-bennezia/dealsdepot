@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 import { Observable, of, forkJoin } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { ParamMap } from '@angular/router';
+import { ArticleEditOutboundDto } from './data/dtos/outbound/article/article-edit-outbound-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -100,7 +101,7 @@ export class ArticleService {
       );
   }
 
-  create(
+  createArticle(
     article: ArticleCreateOutboundDto,
     files: File[]
   ): Observable<ArticleOperationResult> {
@@ -116,6 +117,69 @@ export class ArticleService {
           observe: 'response',
         }
       )
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
+  }
+
+  editArticle(
+    articleId: string,
+    article: ArticleEditOutboundDto
+  ): Observable<ArticleOperationResult> {
+    return this.http
+      .patch<ArticleInboundDto>(
+        `${environment.backendUri}/api/article/${articleId}`,
+        article,
+        {
+          headers: {
+            Authorization: `Bearer ${this.authService.session?.token}`,
+          },
+          observe: 'response',
+        }
+      )
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
+  }
+
+  deleteArticle(articleId: string): Observable<ArticleOperationResult> {
+    return this.http
+      .delete(`${environment.backendUri}/api/article/${articleId}`, {
+        headers: {
+          Authorization: `Bearer ${this.authService.session?.token}`,
+        },
+        observe: 'response',
+      })
       .pipe(
         catchError((err) => {
           return of({

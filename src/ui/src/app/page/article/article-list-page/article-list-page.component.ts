@@ -1,10 +1,20 @@
 import { HttpParams } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  DoCheck,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParamMap, Params, convertToParamMap } from '@angular/router';
+import { initFlowbite } from 'flowbite';
 
 import { ArticleService } from 'src/app/article/article.service';
 import { ArticleInboundDto } from 'src/app/article/data/dtos/inbound/article-inbound-dto';
+import { ArticleEditOutboundDto } from 'src/app/article/data/dtos/outbound/article/article-edit-outbound-dto';
 import { AuthService } from 'src/app/auth/auth.service';
 
 import { Flowbite } from 'src/app/utils/flowbiteUtils';
@@ -31,12 +41,19 @@ export class ArticleListPageComponent implements OnInit {
     link: '',
     content: '',
   };
+  readArticle: ArticleInboundDto | null = null;
+  deletionTargetArticleId: string | null = null;
 
   constructor(
     private authService: AuthService,
     private articleService: ArticleService,
-    builder: FormBuilder
+    builder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
+
+  articleTrackBy(index: number, article: ArticleInboundDto) {
+    return article.id;
+  }
 
   fetchArticles() {
     this.loading = true;
@@ -57,6 +74,8 @@ export class ArticleListPageComponent implements OnInit {
   refetchEditedArticle() {
     if (!this.editedArticle) return;
     this.loadingEditedArticle = true;
+    this.changeDetectorRef.markForCheck();
+
     this.articleService.getArticle(this.editedArticle.id).subscribe((res) => {
       if (res.success) {
         this.editedArticle = res.data;
@@ -66,10 +85,12 @@ export class ArticleListPageComponent implements OnInit {
         // TODO: Handle error
       }
       this.loadingEditedArticle = false;
+      initFlowbite();
     });
   }
 
   ngOnInit(): void {
+    initFlowbite();
     this.fetchArticles();
   }
 
@@ -80,9 +101,51 @@ export class ArticleListPageComponent implements OnInit {
     this.editForm.content = this.editedArticle?.content ?? '';
   }
 
-  onClickEditArticle(article: ArticleInboundDto) {
+  onOpenEditArticleModal(article: ArticleInboundDto) {
     this.editedArticle = article;
     this.editModuleFetchArticleValues();
+  }
+
+  onOpenDeleteArticleModal(article: ArticleInboundDto) {
+    this.deletionTargetArticleId = article.id;
+  }
+
+  onClickEditArticle(ev: Event) {
+    let articleEditDTO: ArticleEditOutboundDto = {
+      link: this.editForm.link,
+      title: this.editForm.title,
+      content: this.editForm.content,
+      tags: this.editForm.tags,
+    };
+    this.articleService
+      .editArticle(this.editedArticle!.id, articleEditDTO)
+      .subscribe((res) => {
+        if (res.success) {
+          this.refetchEditedArticle();
+        } else {
+          //TODO: Handle error
+        }
+      });
+  }
+
+  onClickDeleteArticle(ev: Event) {
+    this.articleService
+      .deleteArticle(this.deletionTargetArticleId!)
+      .subscribe((res) => {
+        if (res.success) {
+          /*this.articles = this.articles.filter(
+            (a) => a.id != this.deletionTargetArticleId
+          );*/
+          this.fetchArticles();
+        } else {
+          //TODO: Handle error
+        }
+        this.deletionTargetArticleId = null;
+      });
+  }
+
+  onClickReadArticle(ev: Event, article: ArticleInboundDto) {
+    this.readArticle = article;
   }
 
   onClickArticleMediaDelete(article: ArticleInboundDto, mediaFileName: string) {
