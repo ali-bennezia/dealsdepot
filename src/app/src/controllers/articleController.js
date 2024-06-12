@@ -23,6 +23,9 @@ exports.getSearch = async function (req, res) {
       sortOptions = {};
     let page = 1;
 
+    console.log("query:");
+    console.log(req.query);
+
     if ("query" in req) {
       let queryObject = req.query;
       if ("query" in queryObject && queryObject?.query != "") {
@@ -94,6 +97,8 @@ exports.getSearch = async function (req, res) {
     }
 
     if (sortOptions == {}) sortOptions = undefined;
+
+    console.log(filterOptions);
 
     let rawResults = await articleModel.paginate(filterOptions, {
       page: page,

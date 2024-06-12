@@ -7,10 +7,18 @@ import {
   SimpleChanges,
   DoCheck,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParamMap, Params, convertToParamMap } from '@angular/router';
 import { initFlowbite } from 'flowbite';
+import {
+  Observable,
+  Subject,
+  Subscription,
+  debounceTime,
+  distinctUntilChanged,
+} from 'rxjs';
 
 import { ArticleService } from 'src/app/article/article.service';
 import { ArticleInboundDto } from 'src/app/article/data/dtos/inbound/article-inbound-dto';
@@ -26,13 +34,14 @@ import { getMediaLink } from 'src/app/utils/mediaUtils';
   styleUrls: ['./article-list-page.component.css'],
 })
 @Flowbite()
-export class ArticleListPageComponent implements OnInit {
+export class ArticleListPageComponent implements OnInit, OnDestroy {
   public getMediaLink: (fileName: string) => string = getMediaLink;
 
   articles: ArticleInboundDto[] = [];
   loading: boolean = false;
   loadingEditedArticle: boolean = false;
   page: number = 1;
+  query: string = '';
 
   editedArticle: ArticleInboundDto | null = null;
   editForm = {
@@ -43,6 +52,12 @@ export class ArticleListPageComponent implements OnInit {
   };
   readArticle: ArticleInboundDto | null = null;
   deletionTargetArticleId: string | null = null;
+
+  onSearchQuerySource: Subject<string> = new Subject();
+  onSearchQuery$: Observable<string> = this.onSearchQuerySource
+    .asObservable()
+    .pipe(debounceTime(300), distinctUntilChanged());
+  onSearchQuerySubscription: Subscription | null = null;
 
   constructor(
     private authService: AuthService,
@@ -55,19 +70,22 @@ export class ArticleListPageComponent implements OnInit {
     return article.id;
   }
 
-  fetchArticles() {
+  fetchArticles(query: string) {
     this.loading = true;
-    let params: URLSearchParams = new URLSearchParams();
-    params.append('author', this.authService.session!.id);
-    params.append('page', String(this.page));
-    let paramMap: ParamMap = convertToParamMap(params);
-    this.articleService.getArticles(paramMap).subscribe((res) => {
+    let params: Record<string, string> = {};
+
+    params['author'] = this.authService.session!.id;
+    params['page'] = String(this.page);
+    if (query.trim() != '') params['query'] = query;
+
+    this.articleService.getArticles(params).subscribe((res) => {
       if (res.success) {
         this.articles = res.data;
       } else {
         // TODO: Handle error
       }
       this.loading = false;
+      initFlowbite();
     });
   }
 
@@ -91,7 +109,20 @@ export class ArticleListPageComponent implements OnInit {
 
   ngOnInit(): void {
     initFlowbite();
-    this.fetchArticles();
+    this.fetchArticles(this.query);
+    if (this.onSearchQuerySubscription)
+      this.onSearchQuerySubscription.unsubscribe();
+    this.onSearchQuerySubscription = this.onSearchQuery$.subscribe((qry) => {
+      this.query = qry;
+      this.fetchArticles(qry);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.onSearchQuerySubscription) {
+      this.onSearchQuerySubscription.unsubscribe();
+      this.onSearchQuerySubscription = null;
+    }
   }
 
   editModuleFetchArticleValues() {
@@ -136,7 +167,7 @@ export class ArticleListPageComponent implements OnInit {
           /*this.articles = this.articles.filter(
             (a) => a.id != this.deletionTargetArticleId
           );*/
-          this.fetchArticles();
+          this.fetchArticles(this.query);
         } else {
           //TODO: Handle error
         }
@@ -188,4 +219,9 @@ export class ArticleListPageComponent implements OnInit {
       this.refetchEditedArticle();
     });
   };
+
+  onSearchInput(ev: Event) {
+    let inp = ev.target as HTMLInputElement;
+    this.onSearchQuerySource.next(inp.value);
+  }
 }

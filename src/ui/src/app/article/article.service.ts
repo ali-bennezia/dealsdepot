@@ -33,11 +33,13 @@ export class ArticleService {
     'author',
   ];
 
-  getArticles(params: ParamMap): Observable<ArticleOperationResult> {
+  getArticles(
+    params: Record<string, string>
+  ): Observable<ArticleOperationResult> {
     let searchParams = new URLSearchParams();
     for (let p of this.allowedFetchParams) {
-      if (params.has(p)) {
-        searchParams.append(p, params.get(p)!);
+      if (p in params) {
+        searchParams.append(p, params[p]);
       }
     }
     let searchParamsStr = searchParams.toString();
