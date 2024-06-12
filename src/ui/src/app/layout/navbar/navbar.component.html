@@ -91,20 +91,6 @@
             >
               Search
             </a>
-            <a
-              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              aria-current="page"
-              [routerLink]="['/about']"
-              [routerLinkActive]="[
-                'active',
-                'bg-gray-900',
-                'text-white',
-                'hover:bg-gray-950'
-              ]"
-              ariaCurrentWhenActive="page"
-            >
-              About
-            </a>
             <ng-container *ngIf="authService.isAuthenticated">
               <a
                 class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
@@ -121,6 +107,20 @@
                 My articles
               </a>
             </ng-container>
+            <a
+              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+              aria-current="page"
+              [routerLink]="['/about']"
+              [routerLinkActive]="[
+                'active',
+                'bg-gray-900',
+                'text-white',
+                'hover:bg-gray-950'
+              ]"
+              ariaCurrentWhenActive="page"
+            >
+              About
+            </a>
           </div>
         </div>
       </div>
@@ -278,6 +278,20 @@
         ariaCurrentWhenActive="page"
         >Search</a
       >
+      <ng-container *ngIf="authService.isAuthenticated">
+        <a
+          class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+          aria-current="page"
+          [routerLink]="['/article', 'list']"
+          [routerLinkActive]="[
+            'bg-gray-900',
+            'text-white',
+            'hover:bg-gray-950'
+          ]"
+          ariaCurrentWhenActive="page"
+          >My articles</a
+        >
+      </ng-container>
       <a
         class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         aria-current="page"
@@ -310,20 +324,6 @@
           ]"
           ariaCurrentWhenActive="page"
           >Register</a
-        >
-      </ng-container>
-      <ng-container *ngIf="authService.isAuthenticated">
-        <a
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-          aria-current="page"
-          [routerLink]="['/article', 'add']"
-          [routerLinkActive]="[
-            'bg-gray-900',
-            'text-white',
-            'hover:bg-gray-950'
-          ]"
-          ariaCurrentWhenActive="page"
-          >My articles</a
         >
       </ng-container>
     </div>

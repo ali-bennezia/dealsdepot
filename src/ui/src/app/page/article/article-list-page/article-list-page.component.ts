@@ -108,7 +108,6 @@ export class ArticleListPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    initFlowbite();
     this.fetchArticles(this.query);
     if (this.onSearchQuerySubscription)
       this.onSearchQuerySubscription.unsubscribe();
@@ -116,6 +115,7 @@ export class ArticleListPageComponent implements OnInit, OnDestroy {
       this.query = qry;
       this.fetchArticles(qry);
     });
+    initFlowbite();
   }
 
   ngOnDestroy(): void {
