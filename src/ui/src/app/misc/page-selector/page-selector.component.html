@@ -1,7 +1,7 @@
 <ul class="inline-flex items-stretch -space-x-px">
   <li>
     <a
-      [ngClass]="{ disabled: getMiddlePage() == 2 }"
+      [ngClass]="{ disabled: !hasPrevPage }"
       class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
       (click)="onClickPage(getMiddlePage() - 1)"
     >
@@ -28,7 +28,8 @@
         'z-10 text-blue-600 bg-blue-50 border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
           getCursorPosition() == 1,
         'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
-          getCursorPosition() != 1
+          getCursorPosition() != 1,
+        disabled: !(totalPages >= getMiddlePage() - 1)
       }"
       (click)="onClickPage(getMiddlePage() - 1)"
       >{{ getMiddlePage() - 1 }}</a
@@ -41,7 +42,8 @@
         'z-10 text-blue-600 bg-blue-50 border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
           getCursorPosition() == 2,
         'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
-          getCursorPosition() != 2
+          getCursorPosition() != 2,
+        disabled: !(totalPages >= getMiddlePage())
       }"
       (click)="onClickPage(getMiddlePage())"
       >{{ getMiddlePage() }}</a
@@ -50,7 +52,14 @@
   <li>
     <a
       aria-current="page"
-      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+      class="flex items-center justify-center text-sm py-2 px-3 leading-tight border"
+      [ngClass]="{
+        'z-10 text-blue-600 bg-blue-50 border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+          getCursorPosition() == 2,
+        'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+          getCursorPosition() != 2,
+        disabled: !(totalPages >= getMiddlePage() + 1)
+      }"
       (click)="onClickPage(getMiddlePage() + 1)"
       >{{ getMiddlePage() + 1 }}</a
     >
@@ -65,11 +74,15 @@
     <a
       class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
       (click)="onClickPage(getMiddlePage() + 98)"
+      [ngClass]="{
+        disabled: !(totalPages >= getMiddlePage() + 98)
+      }"
       >{{ getMiddlePage() + 98 }}</a
     >
   </li>
   <li>
     <a
+      [ngClass]="{ disabled: !hasNextPage }"
       class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
       (click)="onClickPage(getMiddlePage() + 1)"
     >

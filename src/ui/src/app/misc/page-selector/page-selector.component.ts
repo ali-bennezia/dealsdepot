@@ -8,6 +8,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class PageSelectorComponent {
   @Input()
   page!: number;
+  @Input()
+  totalPages!: number;
+  @Input()
+  hasPrevPage!: boolean;
+  @Input()
+  hasNextPage!: boolean;
   @Output()
   onSelectPage: EventEmitter<number> = new EventEmitter<number>();
 

@@ -1,5 +1,6 @@
 a.disabled {
   opacity: 0.5;
+  pointer-events: none;
 }
 
 a:not(a.disabled):hover {
