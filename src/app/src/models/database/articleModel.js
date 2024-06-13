@@ -20,7 +20,7 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-schema.index({ title: "text", content: "text" });
+schema.index({ title: "text", content: "text", tags: "text" });
 schema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("article", schema);
