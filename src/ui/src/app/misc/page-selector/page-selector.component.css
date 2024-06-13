@@ -1,0 +1,7 @@
+a.disabled {
+  opacity: 0.5;
+}
+
+a:not(a.disabled):hover {
+  cursor: pointer;
+}

@@ -25,6 +25,7 @@ import { ArticleListPageComponent } from './page/article/article-list-page/artic
 import { NgIcon, NgIconsModule } from '@ng-icons/core';
 import { ionTrash } from '@ng-icons/ionicons';
 import { SpinnerComponent } from './misc/spinner/spinner.component';
+import { PageSelectorComponent } from './misc/page-selector/page-selector.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { SpinnerComponent } from './misc/spinner/spinner.component';
     ArticleDetailsPageComponent,
     ArticleListPageComponent,
     SpinnerComponent,
+    PageSelectorComponent,
   ],
   imports: [
     BrowserModule,

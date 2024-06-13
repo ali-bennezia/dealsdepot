@@ -22,6 +22,7 @@ import {
 
 import { ArticleService } from 'src/app/article/article.service';
 import { ArticleInboundDto } from 'src/app/article/data/dtos/inbound/article-inbound-dto';
+import { ArticlePaginationResultsDto } from 'src/app/article/data/dtos/inbound/article-pagination-results-dto';
 import { ArticleEditOutboundDto } from 'src/app/article/data/dtos/outbound/article/article-edit-outbound-dto';
 import { AuthService } from 'src/app/auth/auth.service';
 
@@ -37,7 +38,17 @@ import { getMediaLink } from 'src/app/utils/mediaUtils';
 export class ArticleListPageComponent implements OnInit, OnDestroy {
   public getMediaLink: (fileName: string) => string = getMediaLink;
 
-  articles: ArticleInboundDto[] = [];
+  articles: ArticlePaginationResultsDto = {
+    totalDocs: 0,
+    limit: 10,
+    totalPages: 0,
+    hasPrevPage: false,
+    hasNextPage: false,
+    prevPage: null,
+    nextPage: null,
+    pagingCounter: 0,
+    results: [],
+  };
   loading: boolean = false;
   loadingEditedArticle: boolean = false;
   page: number = 1;
@@ -97,8 +108,10 @@ export class ArticleListPageComponent implements OnInit, OnDestroy {
     this.articleService.getArticle(this.editedArticle.id).subscribe((res) => {
       if (res.success) {
         this.editedArticle = res.data;
-        let i = this.articles.findIndex((a) => a.id == this.editedArticle!.id);
-        if (i >= 0) this.articles[i] = res.data;
+        let i = this.articles.results.findIndex(
+          (a) => a.id == this.editedArticle!.id
+        );
+        if (i >= 0) this.articles.results[i] = res.data;
       } else {
         // TODO: Handle error
       }
@@ -223,5 +236,10 @@ export class ArticleListPageComponent implements OnInit, OnDestroy {
   onSearchInput(ev: Event) {
     let inp = ev.target as HTMLInputElement;
     this.onSearchQuerySource.next(inp.value);
+  }
+
+  setPage(p: number) {
+    this.page = Math.max(1, p);
+    this.fetchArticles(this.query);
   }
 }

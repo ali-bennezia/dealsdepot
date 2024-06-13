@@ -23,9 +23,6 @@ exports.getSearch = async function (req, res) {
       sortOptions = {};
     let page = 1;
 
-    console.log("query:");
-    console.log(req.query);
-
     if ("query" in req) {
       let queryObject = req.query;
       if ("query" in queryObject && queryObject?.query != "") {
@@ -98,13 +95,13 @@ exports.getSearch = async function (req, res) {
 
     if (sortOptions == {}) sortOptions = undefined;
 
-    console.log(filterOptions);
-
     let rawResults = await articleModel.paginate(filterOptions, {
       page: page,
       limit: 10,
       sort: sortOptions,
     });
+
+    console.log(rawResults);
 
     let resultsArticles = await Promise.all(
       rawResults.docs.map(async function (a) {
@@ -112,7 +109,19 @@ exports.getSearch = async function (req, res) {
       })
     );
 
-    return res.status(200).json(resultsArticles);
+    let endResults = {
+      totalDocs: rawResults.totalDocs,
+      limit: rawResults.limit,
+      totalPages: rawResults.totalPages,
+      hasPrevPage: rawResults.hasPrevPage,
+      hasNextPage: rawResults.hasNextPage,
+      prevPage: rawResults.prevPage,
+      nextPage: rawResults.nextPage,
+      pagingCounter: rawResults.pagingCounter,
+      results: resultsArticles,
+    };
+
+    return res.status(200).json(endResults);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
