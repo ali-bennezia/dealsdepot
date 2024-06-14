@@ -279,6 +279,35 @@ export class ArticleService {
     );
   }
 
+  addClick(id: string): Observable<ArticleOperationResult> {
+    return this.http
+      .post(
+        `${environment.backendUri}/api/article/${id}`,
+        {},
+        {
+          observe: 'response',
+        }
+      )
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
+  }
+
   setVote(id: string, vote: boolean): Observable<ArticleOperationResult> {
     return this.http
       .post(

@@ -24,6 +24,8 @@ import { ArticleDetailsPageComponent } from './page/article/article-details-page
 import { ArticleListPageComponent } from './page/article/article-list-page/article-list-page.component';
 import { NgIcon, NgIconsModule } from '@ng-icons/core';
 import {
+  ionArrowForwardOutline,
+  ionEyeOutline,
   ionThumbsDownOutline,
   ionThumbsUpOutline,
   ionTrash,
@@ -65,6 +67,8 @@ import { ArticleDisplayComponent } from './page/search-page/article-display/arti
       ionTrash,
       ionThumbsUpOutline,
       ionThumbsDownOutline,
+      ionEyeOutline,
+      ionArrowForwardOutline,
     }),
   ],
   providers: [],

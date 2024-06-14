@@ -18,6 +18,8 @@ router.get(
   controller.getFindByIdApi
 );
 
+router.post("/:id", controller.signalArticleAccess);
+
 router.post(
   "/:id/vote/:vote",
   authMiddlewares.isAuthenticatedMiddleware,

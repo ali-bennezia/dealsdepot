@@ -24,6 +24,14 @@
     </span>
     <div class="w-full">
       <div class="flex flex-row float-right">
+        <p class="m-2 font-mono text-gray-400 icon-text-btn">
+          <ng-icon name="ionArrowForwardOutline" size="24"></ng-icon>
+          {{ article.clicks }}
+        </p>
+        <p class="m-2 font-mono text-gray-400 icon-text-btn">
+          <ng-icon name="ionEyeOutline" size="24"></ng-icon>
+          {{ article.views }}
+        </p>
         <p
           class="m-2 font-mono text-gray-400 icon-text-btn"
           (click)="onClickVoteFor($event)"
@@ -46,6 +54,44 @@
           ></ng-icon>
           {{ article.votes.against }}
         </p>
+      </div>
+    </div>
+    <div class="w-full">
+      <div class="flex flex-row float-right">
+        <p class="h-full text-center text-gray-400 leading-4 m-2">
+          Posted {{ article.createdAtTime | date }} •
+          {{ article.authorData.username }}
+        </p>
+
+        <a [routerLink]="['/user', article.author]">
+          <img
+            *ngIf="
+              article.authorData.profilePictureFileName;
+              else ifNoProfilePictureBlock
+            "
+            class="w-10 h-10 rounded-full avatar"
+            [src]="getMediaLink(article.authorData.profilePictureFileName)"
+            alt="Rounded avatar"
+          />
+          <ng-template #ifNoProfilePictureBlock>
+            <div
+              class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 avatar"
+            >
+              <svg
+                class="absolute w-12 h-12 text-gray-400 -left-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </div>
+          </ng-template>
+        </a>
       </div>
     </div>
   </div>

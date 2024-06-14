@@ -45,7 +45,7 @@ exports.getArticleOutboundDTOAsync = async function getArticleOutboundDTOAsync(
 ) {
   return {
     id: doc._id.toString(),
-    author: doc.author.toString,
+    author: doc.author.toString(),
     link: doc.link,
     title: doc.title,
     content: doc.content,

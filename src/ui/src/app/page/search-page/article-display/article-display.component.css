@@ -23,3 +23,7 @@ ng-icon {
 .article-info:hover {
   cursor: pointer;
 }
+
+.avatar {
+  outline: solid 4px rgba(153, 153, 153, 0.308);
+}

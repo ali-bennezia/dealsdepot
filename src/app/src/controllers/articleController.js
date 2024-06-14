@@ -109,8 +109,6 @@ exports.getSearch = async function (req, res) {
       })
     );
 
-    console.log(filterOptions);
-
     let endResults = {
       totalDocs: rawResults.totalDocs,
       limit: rawResults.limit,
@@ -141,6 +139,9 @@ exports.getFindByIdApi = async function (req, res) {
       return res.sendStatus(404);
 
     let userId = req?.authenticationData?.payload?.userId;
+    let article = await articleModel.findById(req.params.id);
+    ++article.views;
+    await article.save();
 
     return res
       .status(200)
@@ -150,6 +151,27 @@ exports.getFindByIdApi = async function (req, res) {
           userId
         )
       );
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+};
+
+/**
+ * POST /api/article/:id/access
+ * Article link access increment API.
+ */
+exports.signalArticleAccess = async function (req, res) {
+  try {
+    if (!("params" in req) || !("id" in req.params)) return res.sendStatus(400);
+    if (!(await articleModel.exists({ _id: req.params.id })))
+      return res.sendStatus(404);
+
+    let article = await articleModel.findById(req.params.id);
+    ++article.clicks;
+    await article.save();
+
+    return res.sendStatus(200);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
