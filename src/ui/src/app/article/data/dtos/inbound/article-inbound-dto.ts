@@ -14,6 +14,7 @@ export interface ArticleInboundDto {
   votes: {
     for: number;
     against: number;
+    userChoice: boolean | null;
   };
   authorData: UserInboundDto;
   createdAtTime: number;

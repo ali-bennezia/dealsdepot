@@ -8,10 +8,10 @@ const articleVoteModel = require("./../models/database/articleVoteModel");
 
 const checkArticleCreateDTO = require("./../models/dtos/article/articleCreateDTO");
 const checkArticleEditDTO = require("./../models/dtos/article/articleEditDTO");
-const { query } = require("express");
+const { query, json } = require("express");
 
 /**
- * GET /api/article?query=..&minclicks=..&maxclicks=..&minviews=..&maxviews=..&tags=..&sortBy=..&sortOrder=..&page=..&author=..
+ * GET /api/article?query=..&tags=..&minclicks=..&maxclicks=..&minviews=..&maxviews=..&tags=..&sortBy=..&sortOrder=..&page=..&author=..
  * Article search API.
  * The sortOrder parameter must be either 1 or -1.
  * The page parameter is 1-indexed.
@@ -74,7 +74,7 @@ exports.getSearch = async function (req, res) {
         if (!Array.isArray(tags) || tags == null) return res.sendStatus(400);
         filterOptions = {
           ...filterOptions,
-          tags: { $in: tags },
+          tags: { $all: tags },
         };
       }
 
@@ -101,13 +101,15 @@ exports.getSearch = async function (req, res) {
       sort: sortOptions,
     });
 
-    console.log(rawResults);
+    let userId = req?.authenticationData?.payload?.userId;
 
     let resultsArticles = await Promise.all(
       rawResults.docs.map(async function (a) {
-        return await articleUtils.getArticleOutboundDTOAsync(a);
+        return await articleUtils.getArticleOutboundDTOAsync(a, userId);
       })
     );
+
+    console.log(filterOptions);
 
     let endResults = {
       totalDocs: rawResults.totalDocs,
@@ -137,11 +139,15 @@ exports.getFindByIdApi = async function (req, res) {
     if (!("params" in req) || !("id" in req.params)) return res.sendStatus(400);
     if (!(await articleModel.exists({ _id: req.params.id })))
       return res.sendStatus(404);
+
+    let userId = req?.authenticationData?.payload?.userId;
+
     return res
       .status(200)
       .json(
         await articleUtils.getArticleOutboundDTOAsync(
-          await articleModel.create(await articleModel.findById(req.params.id))
+          await articleModel.create(await articleModel.findById(req.params.id)),
+          userId
         )
       );
   } catch (err) {
@@ -251,14 +257,17 @@ exports.postCreateApi = async function (req, res) {
       link: req.body.link,
       title: req.body.title,
       content: req.body.content,
-      tags: req.body.tags.split(" "),
+      tags: req.body.tags.split(", "),
       medias: medias,
     };
+    let userId = req?.authenticationData?.payload?.userId;
+
     return res
       .status(201)
       .json(
         await articleUtils.getArticleOutboundDTOAsync(
-          await articleModel.create(createArticle)
+          await articleModel.create(createArticle),
+          userId
         )
       );
   } catch (err) {
@@ -337,10 +346,11 @@ exports.patchEditApi = async function (req, res) {
     sanitationUtils.applyObject(req.body, article);
 
     let doc = await article.save();
+    let userId = req?.authenticationData?.payload?.userId;
 
     return res
       .status(200)
-      .json(await articleUtils.getArticleOutboundDTOAsync(doc));
+      .json(await articleUtils.getArticleOutboundDTOAsync(doc, userId));
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);

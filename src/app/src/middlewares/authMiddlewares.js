@@ -22,3 +22,19 @@ exports.isAnonymousMiddleware = function (req, res, next) {
   if (authHeader) return res.sendStatus(401);
   next();
 };
+
+exports.extractAuthenticationDataMiddleware = function (req, res, next) {
+  try {
+    let authHeader = req?.headers?.["authorization"];
+    let token = authHeader.replace("Bearer ", "");
+    let payload = null;
+    payload = jwt.verify(token, process.env.SECRET_KEY);
+    req.authenticationData = {
+      payload: payload,
+      token: token,
+    };
+    next();
+  } catch (jwtErr) {
+    next();
+  }
+};

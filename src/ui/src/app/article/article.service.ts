@@ -51,6 +51,7 @@ export class ArticleService {
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.authService.session?.token}`,
           },
           observe: 'response',
         }
@@ -80,6 +81,7 @@ export class ArticleService {
       .get<ArticleInboundDto>(`${environment.backendUri}/api/article/${id}`, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.authService.session?.token}`,
         },
         observe: 'response',
       })
@@ -275,5 +277,65 @@ export class ArticleService {
           );
       })
     );
+  }
+
+  setVote(id: string, vote: boolean): Observable<ArticleOperationResult> {
+    return this.http
+      .post(
+        `${environment.backendUri}/api/article/${id}/vote/${vote}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${this.authService.session?.token}`,
+          },
+          observe: 'response',
+        }
+      )
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
+  }
+
+  deleteVote(id: string): Observable<ArticleOperationResult> {
+    return this.http
+      .delete(`${environment.backendUri}/api/article/${id}/vote`, {
+        headers: {
+          Authorization: `Bearer ${this.authService.session?.token}`,
+        },
+        observe: 'response',
+      })
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((resp) => {
+          if (resp instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: resp.status,
+              data: resp.body,
+            });
+          } else return of(resp);
+        })
+      );
   }
 }

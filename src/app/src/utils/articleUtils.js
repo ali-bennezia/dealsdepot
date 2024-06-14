@@ -5,6 +5,19 @@ const userModel = require("./../models/database/userModel");
 const fileUtils = require("./fileUtils");
 const userUtils = require("./userUtils");
 
+exports.getUserChoiceAsync = async function getUserChoiceAsync(
+  articleId,
+  userId
+) {
+  let vote = await articleVoteModel
+    .findOne({ author: userId, article: articleId })
+    .exec();
+
+  if (vote != null) {
+    return vote.vote;
+  } else return null;
+};
+
 exports.tryDeleteArticleMediasAsync =
   async function tryDeleteArticleMediasAsync(articleId) {
     let article = await articleModel.findById(articleId);
@@ -27,7 +40,8 @@ exports.tryDeleteArticleVotesAsync = async function tryDeleteArticleVotesAsync(
 };
 
 exports.getArticleOutboundDTOAsync = async function getArticleOutboundDTOAsync(
-  doc
+  doc,
+  userId
 ) {
   return {
     id: doc._id.toString(),
@@ -47,6 +61,9 @@ exports.getArticleOutboundDTOAsync = async function getArticleOutboundDTOAsync(
       against: await articleVoteModel
         .countDocuments({ article: doc._id.toString(), vote: false })
         .exec(),
+      userChoice: userId
+        ? await this.getUserChoiceAsync(doc._id.toString(), userId)
+        : null,
     },
     authorData: userUtils.getUserOutboundDTO(
       await userModel.findById(doc.author)

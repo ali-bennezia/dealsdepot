@@ -6,9 +6,17 @@ const router = express.Router();
 const controller = require("./../controllers/articleController");
 const authMiddlewares = require("./../middlewares/authMiddlewares");
 
-router.get("", controller.getSearch);
+router.get(
+  "",
+  authMiddlewares.extractAuthenticationDataMiddleware,
+  controller.getSearch
+);
 
-router.get("/:id", controller.getFindByIdApi);
+router.get(
+  "/:id",
+  authMiddlewares.extractAuthenticationDataMiddleware,
+  controller.getFindByIdApi
+);
 
 router.post(
   "/:id/vote/:vote",

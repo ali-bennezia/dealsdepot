@@ -23,9 +23,14 @@ import { ArticleAddPageComponent } from './page/article/article-add-page/article
 import { ArticleDetailsPageComponent } from './page/article/article-details-page/article-details-page.component';
 import { ArticleListPageComponent } from './page/article/article-list-page/article-list-page.component';
 import { NgIcon, NgIconsModule } from '@ng-icons/core';
-import { ionTrash } from '@ng-icons/ionicons';
+import {
+  ionThumbsDownOutline,
+  ionThumbsUpOutline,
+  ionTrash,
+} from '@ng-icons/ionicons';
 import { SpinnerComponent } from './misc/spinner/spinner.component';
 import { PageSelectorComponent } from './misc/page-selector/page-selector.component';
+import { ArticleDisplayComponent } from './page/search-page/article-display/article-display.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +53,7 @@ import { PageSelectorComponent } from './misc/page-selector/page-selector.compon
     ArticleListPageComponent,
     SpinnerComponent,
     PageSelectorComponent,
+    ArticleDisplayComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,7 +61,11 @@ import { PageSelectorComponent } from './misc/page-selector/page-selector.compon
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgIconsModule.withIcons({ ionTrash }),
+    NgIconsModule.withIcons({
+      ionTrash,
+      ionThumbsUpOutline,
+      ionThumbsDownOutline,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
