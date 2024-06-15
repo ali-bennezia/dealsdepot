@@ -14,7 +14,7 @@ import { AuthService } from './auth/auth.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-  title = 'ui';
+  title = 'DealsDepot';
 
   constructor(private authService: AuthService) {}
 
