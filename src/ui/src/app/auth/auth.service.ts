@@ -78,6 +78,7 @@ export class AuthService {
           return of({
             success: false,
             status: err.status,
+            data: err.body,
           });
         }),
         switchMap((data) => {
@@ -87,6 +88,7 @@ export class AuthService {
             return of({
               success: true,
               status: data.status,
+              data: data.body,
             });
           } else return of(data);
         })
@@ -111,6 +113,7 @@ export class AuthService {
           return of({
             success: false,
             status: err.status,
+            data: err.body,
           });
         }),
         switchMap((data) => {
@@ -119,6 +122,64 @@ export class AuthService {
             return of({
               success: true,
               status: data.status,
+              data: data.body,
+            });
+          } else return of(data);
+        })
+      );
+  }
+
+  getProfile(): Observable<AuthOperationResult> {
+    return this.http
+      .get<AuthSession>(`${environment.backendUri}/api/user/profile`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.session?.token}`,
+        },
+        observe: 'response',
+      })
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((data) => {
+          if (data instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: data.status,
+              data: data.body,
+            });
+          } else return of(data);
+        })
+      );
+  }
+
+  getUserById(id: string): Observable<AuthOperationResult> {
+    return this.http
+      .get<AuthSession>(`${environment.backendUri}/api/user/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        observe: 'response',
+      })
+      .pipe(
+        catchError((err) => {
+          return of({
+            success: false,
+            status: err.status,
+            data: err.body,
+          });
+        }),
+        switchMap((data) => {
+          if (data instanceof HttpResponse) {
+            return of({
+              success: true,
+              status: data.status,
+              data: data.body,
             });
           } else return of(data);
         })

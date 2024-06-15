@@ -17,6 +17,7 @@ import {
   isAnonymousCanActivateFn,
   isAuthenticatedCanActivateFn,
 } from '../page/guards';
+import { UserDetailsPageComponent } from '../page/user/user-details-page/user-details-page.component';
 
 export const ROUTES: Routes = [
   {
@@ -56,6 +57,10 @@ export const ROUTES: Routes = [
     path: 'profile',
     component: ProfilePageComponent,
     canActivate: [isAuthenticatedCanActivateFn],
+  },
+  {
+    path: 'user/:id',
+    component: UserDetailsPageComponent,
   },
   {
     path: 'settings',

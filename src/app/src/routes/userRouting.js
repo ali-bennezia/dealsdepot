@@ -13,5 +13,11 @@ router.post(
   authMiddlewares.isAnonymousMiddleware,
   controller.postSignInApi
 );
+router.get(
+  "/profile",
+  authMiddlewares.isAuthenticatedMiddleware,
+  controller.getProfileApi
+);
+router.get("/:id", controller.getUserByIdApi);
 
 module.exports = router;

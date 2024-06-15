@@ -34,6 +34,7 @@ import { SpinnerComponent } from './misc/spinner/spinner.component';
 import { PageSelectorComponent } from './misc/page-selector/page-selector.component';
 import { ArticleDisplayComponent } from './page/search-page/article-display/article-display.component';
 import { CommentSectionComponent } from './misc/comment-section/comment-section.component';
+import { UserDetailsPageComponent } from './page/user/user-details-page/user-details-page.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { CommentSectionComponent } from './misc/comment-section/comment-section.
     PageSelectorComponent,
     ArticleDisplayComponent,
     CommentSectionComponent,
+    UserDetailsPageComponent,
   ],
   imports: [
     BrowserModule,

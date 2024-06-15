@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const userModel = require("./../models/database/userModel");
+const userUtils = require("./../utils/userUtils");
 
 const checkUserRegisterDTO = require("./../models/dtos/user/userRegisterDTO");
 const checkUserLoginDTO = require("./../models/dtos/user/userLoginDTO");
@@ -55,6 +56,7 @@ exports.postSignInApi = async function (req, res) {
       username: foundUser.username,
       roles: foundUser.roles,
       signedInAtTime: new Date().getTime(),
+      createdAtTime: foundUser.createdAt.getTime(),
     };
     let token = jwt.sign(
       payload,
@@ -68,7 +70,36 @@ exports.postSignInApi = async function (req, res) {
       username: foundUser.username,
       roles: foundUser?.roles ?? [],
       profilePictureFileName: foundUser?.profilePictureFileName ?? null,
+      createdAtTime: foundUser.createdAt.getTime(),
     });
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+};
+
+exports.getUserByIdApi = async function (req, res) {
+  try {
+    if (!req?.params || !("id" in req.params)) return res.status(400).send();
+
+    let foundUser = await userModel.findById(req.params.id);
+    if (foundUser == null) return res.sendStatus(404);
+
+    return res.status(200).json(userUtils.getUserOutboundDTO(foundUser));
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+};
+
+exports.getProfileApi = async function (req, res) {
+  try {
+    let foundUser = await userModel.findById(
+      req.authenticationData.payload.userId
+    );
+    if (foundUser == null) return res.sendStatus(404);
+
+    return res.status(200).json(userUtils.getProfileOutboundDTO(foundUser));
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);

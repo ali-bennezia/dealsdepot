@@ -1,8 +1,8 @@
-export interface AuthSession {
+export interface UserProfileInboundDto {
   id: string;
-  token: string;
   username: string;
-  roles: string[];
   profilePictureFileName: string | null;
+  roles: string[];
+  email: string;
   createdAtTime: number;
 }
