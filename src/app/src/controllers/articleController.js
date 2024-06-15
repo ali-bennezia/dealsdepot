@@ -16,7 +16,15 @@ const { query, json } = require("express");
  * The sortOrder parameter must be either 1 or -1.
  * The page parameter is 1-indexed.
  */
-const sortFilters = ["title", "content", "clicks", "views", "totalVotes"];
+const sortFilters = [
+  "title",
+  "content",
+  "clicks",
+  "views",
+  "totalVotes",
+  "createdAt",
+  "updatedAt",
+];
 exports.getSearch = async function (req, res) {
   try {
     let filterOptions = {},

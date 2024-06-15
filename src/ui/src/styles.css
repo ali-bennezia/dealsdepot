@@ -46,3 +46,33 @@ button:disabled {
   scale: 1.2;
   transition: 100ms scale ease-out;
 }
+
+.article-icon {
+  color: rgb(87, 87, 87);
+}
+
+.icon-text-btn {
+  scale: 1;
+  transition: 100ms scale ease-in;
+}
+
+.icon-text-btn:hover {
+  cursor: pointer;
+  scale: 1.2;
+}
+
+.icon-text-btn > ng-icon {
+  opacity: 0.5;
+}
+
+.icon-text-btn > ng-icon.voted {
+  opacity: 1;
+}
+
+.article-info:hover {
+  cursor: pointer;
+}
+
+.avatar {
+  outline: solid 4px rgba(153, 153, 153, 0.308);
+}

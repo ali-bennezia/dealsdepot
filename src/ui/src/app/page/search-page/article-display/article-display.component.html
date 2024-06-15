@@ -25,7 +25,11 @@
     <div class="w-full">
       <div class="flex flex-row float-right">
         <p class="m-2 font-mono text-gray-400 icon-text-btn">
-          <ng-icon name="ionArrowForwardOutline" size="24"></ng-icon>
+          <ng-icon
+            name="ionArrowForwardOutline"
+            class="article-icon"
+            size="24"
+          ></ng-icon>
           {{ article.clicks }}
         </p>
         <p class="m-2 font-mono text-gray-400 icon-text-btn">
@@ -40,6 +44,7 @@
             name="ionThumbsUpOutline"
             size="24"
             [ngClass]="{ voted: article.votes.userChoice === true }"
+            class="article-icon"
           ></ng-icon>
           {{ article.votes.for }}
         </p>
@@ -51,6 +56,7 @@
             name="ionThumbsDownOutline"
             size="24"
             [ngClass]="{ voted: article.votes.userChoice === false }"
+            class="article-icon"
           ></ng-icon>
           {{ article.votes.against }}
         </p>

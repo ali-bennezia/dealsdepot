@@ -1,1 +1,54 @@
-<p>home-page works!</p>
+<div class="flex flex-row justify-center">
+  <div
+    class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+  >
+    <ul class="flex flex-wrap -mb-px">
+      <li class="me-2 home-tab">
+        <a
+          class="inline-block p-4"
+          [ngClass]="{
+            'border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+              tab != 1,
+            'text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+              tab == 1
+          }"
+          (click)="setTab(1)"
+          >Most viewed</a
+        >
+      </li>
+      <li class="me-2 home-tab">
+        <a
+          class="inline-block p-4"
+          [ngClass]="{
+            'border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+              tab != 2,
+            'text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+              tab == 2
+          }"
+          (click)="setTab(2)"
+          aria-current="page"
+          >Most clicked</a
+        >
+      </li>
+      <li class="me-2 home-tab">
+        <a
+          class="inline-block p-4"
+          [ngClass]="{
+            'border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+              tab != 3,
+            'text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+              tab == 3
+          }"
+          (click)="setTab(3)"
+          >Recent</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="w-full flex flex-col items-center justify-start">
+  <app-article-display
+    *ngFor="let a of articles"
+    [article]="a"
+  ></app-article-display>
+</div>

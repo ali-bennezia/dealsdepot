@@ -29,7 +29,39 @@ export class ArticleDetailsPageComponent {
 
   onAccessLink(ev: Event) {
     this.articleService.addClick(this.article!.id).subscribe((res) => {});
-    console.log('test');
+  }
+
+  onClickVoteFor(ev: Event) {
+    let previousUserChoice: boolean | null = this.article!.votes.userChoice;
+
+    this.articleService.setVote(this.article!.id, true).subscribe((res) => {
+      if (res.success) {
+        this.article!.votes.userChoice = true;
+        ++this.article!.votes.for;
+        if (previousUserChoice != null) {
+          if (previousUserChoice === true) --this.article!.votes.for;
+          else --this.article!.votes.against;
+        }
+      } else {
+        //TODO: Handle error
+      }
+    });
+  }
+  onClickVoteAgainst(ev: Event) {
+    let previousUserChoice: boolean | null = this.article!.votes.userChoice;
+
+    this.articleService.setVote(this.article!.id, false).subscribe((res) => {
+      if (res.success) {
+        this.article!.votes.userChoice = false;
+        ++this.article!.votes.against;
+        if (previousUserChoice != null) {
+          if (previousUserChoice === true) --this.article!.votes.for;
+          else --this.article!.votes.against;
+        }
+      } else {
+        //TODO: Handle error
+      }
+    });
   }
 
   constructor(
